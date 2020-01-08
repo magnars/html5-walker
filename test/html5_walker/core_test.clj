@@ -37,7 +37,17 @@
                   <div class=\"bar\"><a href=\"barn\">Howdy!</a></div>
                 </body>"
                [:div.bar :a]))
-         ["barn"])))
+         ["barn"]))
+
+  (is (= (map #(.getAttribute % "id")
+              (sut/find-nodes
+               "<body>Hello!
+                  <span class=\"foo\" id=\"fool\">Hi!</a>
+                  <div class=\"foo\" id=\"food\">Howdy!</a>
+                  <a class=\"foo\" id=\"foot\">Howdy!</a>
+                </body>"
+               [:.foo]))
+         ["fool" "food" "foot"])))
 
 (deftest replace-in-document
   (is (= (sut/replace-in-document

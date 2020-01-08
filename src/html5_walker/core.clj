@@ -6,7 +6,9 @@
   (let [[tag-name & classes] (str/split (name element-kw) #"\.")]
     (reduce
      (fn [s class] (.hasClass s class))
-     (.element selector tag-name)
+     (cond-> selector
+       (seq tag-name)
+       (.element tag-name))
      classes)))
 
 (defn create-matcher [path]
