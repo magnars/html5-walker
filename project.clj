@@ -1,4 +1,4 @@
-(defproject html5-walker "2019-10-01"
+(defproject html5-walker "2020-01-08"
   :description "Search and replace html5."
   :url "https://github.com/magnars/html5-walker"
   :license {:name "Eclipse Public License"

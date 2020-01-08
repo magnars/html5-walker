@@ -6,11 +6,11 @@ and replace in HTML5 strings.
 
 ## Install
 
-- add `[html5-walker "2019-10-01"]` to `:dependencies` in your project.clj
+- add `[html5-walker "2020-01-08"]` to `:dependencies` in your project.clj
 
 or
 
-- add  `html5-walker {:mvn/version "2019-10-01"}` to `:deps` in your deps.edn
+- add  `html5-walker {:mvn/version "2020-01-08"}` to `:deps` in your deps.edn
 
 ## Usage
 
@@ -71,6 +71,12 @@ Note that `replace-in-fragment` will actually remove these tags when found.
 ## More usage
 
 Take a look at the tests if you'd like more examples.
+
+## Changes
+
+#### 2020-01-08
+
+- Support selecting only by class name, like so: `:.myclass`
 
 ## License
 
