@@ -27,15 +27,15 @@
     (doseq [[path f] path->f]
       (doseq [node (.getAllNodesMatching doc (create-matcher path))]
         (f node)))
-    (.getOuterHTML doc)))
+    (.getOuterHTML (.getDocumentElement doc))))
 
 (defn replace-in-fragment [html path->f]
   (let [parser (Parser.)
-        doc (first (.parseFragment parser (Element. "div") (str "<div>" html "</div>")))]
+        el (first (.parseFragment parser (Element. "div") (str "<div>" html "</div>")))]
     (doseq [[path f] path->f]
-      (doseq [node (.getAllNodesMatching doc (create-matcher path))]
+      (doseq [node (.getAllNodesMatching el (create-matcher path))]
         (f node)))
-    (.getInnerHTML doc)))
+    (.getInnerHTML el)))
 
 (defn find-nodes [html path]
   (.getAllNodesMatching (.parse (Parser.) html) (create-matcher path)))
