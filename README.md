@@ -6,11 +6,11 @@ and replace in HTML5 strings.
 
 ## Install
 
-- add `[html5-walker "2020-01-08"]` to `:dependencies` in your project.clj
+- add `[html5-walker "2022.03.07"]` to `:dependencies` in your project.clj
 
 or
 
-- add  `html5-walker {:mvn/version "2020-01-08"}` to `:deps` in your deps.edn
+- add  `html5-walker {:mvn/version "2022.03.07"}` to `:deps` in your deps.edn
 
 ## Usage
 
@@ -73,6 +73,11 @@ Note that `replace-in-fragment` will actually remove these tags when found.
 Take a look at the tests if you'd like more examples.
 
 ## Changes
+
+#### 2022.03.07
+
+- Upgrade jfiveparse to version 0.9.0
+- Switch versioning separator to dot, for more Maven friendly version numbers
 
 #### 2020-01-08
 
