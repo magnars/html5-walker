@@ -1,6 +1,6 @@
 (ns html5-walker.core
-  (:import [ch.digitalfondue.jfiveparse Document Element Node Parser Selector NodeMatcher])
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str])
+  (:import (ch.digitalfondue.jfiveparse Element Parser Selector)))
 
 (defn- match-path-fragment [selector element-kw]
   (let [[tag-name & classes] (str/split (name element-kw) #"\.")]
