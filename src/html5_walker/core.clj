@@ -2,14 +2,49 @@
   (:require [clojure.string :as str])
   (:import (ch.digitalfondue.jfiveparse Element Parser Selector)))
 
-(defn- match-path-fragment [selector element-kw]
-  (let [[tag-name & classes] (str/split (name element-kw) #"\.")]
-    (reduce
-     (fn [s class] (.hasClass s class))
-     (cond-> selector
-       (seq tag-name)
-       (.element tag-name))
-     classes)))
+(def prefix->kind
+  {nil :element
+   "#" :id
+   "." :class
+   "[" :attr})
+
+(defn parse-selector
+  "Breaks a CSS selector element into tag matcher, class matchers, id matcher, and
+  attribute matchers."
+  [selector]
+  (->> (str/replace selector #":(first|last)-child" "")
+       (re-seq #"([#\.\[])?([a-z0-9\-\:]+)(?:(.?=)([a-z0-9\-\:]+)])?")
+       (map #(into [(prefix->kind (second %))] (remove nil? (drop 2 %))))
+       (concat (->> (re-seq #":((?:first|last)-child)" selector)
+                    (map (comp vector keyword second))))))
+
+(comment
+
+  (parse-selector "div#content.text[property=og:image].mobile[style][data-test~=bla]:first-child")
+  (parse-selector "div:first-child")
+  (parse-selector ":first-child")
+  (parse-selector "[property]")
+
+  )
+
+(defn- match-path-fragment [selector element]
+  (reduce
+   (fn [s [kind m comparator v]]
+     (case kind
+       :element (.element s m)
+       :id (.id s m)
+       :class (.hasClass s m)
+       :attr (case comparator
+               "=" (.attrValEq s m v)
+               "*=" (.attrValContains s m v)
+               "$=" (.attrValEndWith s m v)
+               "~=" (.attrValInList s m v)
+               "^=" (.attrValStartWith s m v)
+               nil (.attr s m))
+       :first-child (.isFirstChild s)
+       :last-child (.isLastChild s)))
+   selector
+   (parse-selector (name element))))
 
 (defn create-matcher [path]
   (.toMatcher
