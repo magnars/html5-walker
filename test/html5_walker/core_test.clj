@@ -3,51 +3,56 @@
             [html5-walker.core :as sut]))
 
 (deftest find-nodes
-  (is (= (map #(.getAttribute % "href")
-              (sut/find-nodes
-               "<body>Hello!
+  (testing "element selector"
+    (is (= (map #(.getAttribute % "href")
+                (sut/find-nodes
+                 "<body>Hello!
                   <a href=\"foo\">Hi!</a>
                   <a href=\"bar\">Howdy!</a>
                 </body>"
-               [:a]))
-         ["foo" "bar"]))
+                 [:a]))
+           ["foo" "bar"])))
 
-  (is (= (map #(.getAttribute % "href")
-              (sut/find-nodes
-               "<body>Hello!
+  (testing "element.class selector"
+    (is (= (map #(.getAttribute % "href")
+                (sut/find-nodes
+                 "<body>Hello!
                   <a class=\"foo\" href=\"fool\">Hi!</a>
                   <a class=\"bar\" href=\"barn\">Howdy!</a>
                 </body>"
-               [:a.bar]))
-         ["barn"]))
+                 [:a.bar]))
+           ["barn"])))
 
-  (is (= (map #(.getAttribute % "href")
-              (sut/find-nodes
-               "<body>Hello!
+  (testing "multiple class selector"
+    (is (= (map #(.getAttribute % "href")
+                (sut/find-nodes
+                 "<body>Hello!
                   <a class=\"foo baz\" href=\"fool\">Hi!</a>
                   <a class=\"bar\" href=\"barn\">Howdy!</a>
                 </body>"
-               [:a.foo.baz]))
-         ["fool"]))
+                 [:a.foo.baz]))
+           ["fool"])))
 
-  (is (= (map #(.getAttribute % "href")
-              (sut/find-nodes
-               "<body>Hello!
+  (testing "descendant selector"
+    (is (= (map #(.getAttribute % "href")
+                (sut/find-nodes
+                 "<body>Hello!
                   <div class=\"foo\"><a href=\"fool\">Hi!</a></div>
                   <div class=\"bar\"><a href=\"barn\">Howdy!</a></div>
                 </body>"
-               [:div.bar :a]))
-         ["barn"]))
+                 [:div.bar :a]))
+           ["barn"])))
 
-  (is (= (map #(.getAttribute % "id")
-              (sut/find-nodes
-               "<body>Hello!
+  (testing ".class only selector"
+    (is (= (map #(.getAttribute % "id")
+                (sut/find-nodes
+                 "<body>Hello!
                   <span class=\"foo\" id=\"fool\">Hi!</a>
                   <div class=\"foo\" id=\"food\">Howdy!</a>
                   <a class=\"foo\" id=\"foot\">Howdy!</a>
                 </body>"
-               [:.foo]))
-         ["fool" "food" "foot"])))
+                 [:.foo]))
+           ["fool" "food" "foot"]))))
 
 (deftest replace-in-document
   (is (= (sut/replace-in-document
