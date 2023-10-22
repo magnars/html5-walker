@@ -33,12 +33,12 @@
                  [:a.foo.baz]))
            ["fool"])))
 
-  (testing "descendant selector"
+  (testing "implicit child selector"
     (is (= (map #(.getAttribute % "href")
                 (sut/find-nodes
                  "<body>Hello!
                   <div class=\"foo\"><a href=\"fool\">Hi!</a></div>
-                  <div class=\"bar\"><div><a href=\"barn\">Howdy!</a></div></div>
+                  <div class=\"bar\"><a href=\"barn\">Howdy!</a></div>
                 </body>"
                  [:div.bar :a]))
            ["barn"])))
@@ -53,14 +53,14 @@
                  [:div.bar :> :a]))
            [])))
 
-  (testing "child selector"
+  (testing "explicit child selector"
     (is (= (map #(.getAttribute % "href")
                 (sut/find-nodes
                  "<body>Hello!
                   <div class=\"foo\"><a href=\"fool\">Hi!</a></div>
                   <div class=\"bar\"><div><a href=\"barn\">Howdy!</a></div></div>
                 </body>"
-                 [:div.bar :> :div :> :a]))
+                 '[div.bar > div > a]))
            ["barn"])))
 
   (testing ".class only selector"
