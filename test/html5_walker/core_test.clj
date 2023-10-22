@@ -38,9 +38,29 @@
                 (sut/find-nodes
                  "<body>Hello!
                   <div class=\"foo\"><a href=\"fool\">Hi!</a></div>
-                  <div class=\"bar\"><a href=\"barn\">Howdy!</a></div>
+                  <div class=\"bar\"><div><a href=\"barn\">Howdy!</a></div></div>
                 </body>"
                  [:div.bar :a]))
+           ["barn"])))
+
+  (testing "child selector does not match any descendant"
+    (is (= (map #(.getAttribute % "href")
+                (sut/find-nodes
+                 "<body>Hello!
+                  <div class=\"foo\"><a href=\"fool\">Hi!</a></div>
+                  <div class=\"bar\"><div><a href=\"barn\">Howdy!</a></div></div>
+                </body>"
+                 [:div.bar :> :a]))
+           [])))
+
+  (testing "child selector"
+    (is (= (map #(.getAttribute % "href")
+                (sut/find-nodes
+                 "<body>Hello!
+                  <div class=\"foo\"><a href=\"fool\">Hi!</a></div>
+                  <div class=\"bar\"><div><a href=\"barn\">Howdy!</a></div></div>
+                </body>"
+                 [:div.bar :> :div :> :a]))
            ["barn"])))
 
   (testing ".class only selector"

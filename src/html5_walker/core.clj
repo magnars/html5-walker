@@ -46,15 +46,41 @@
    selector
    (parse-selector (name element))))
 
+(defn make-descendants-explicit
+  "Walks a path and returns pairs of [descendant element] where descendant is
+  either `:descendant` or `:child`, describing the desired relationship to the
+  previous path element. `descendant` will be `nil` for the first element. `:>`
+  creates a `:child` relationship between two elements, while elements that
+  don't have an explicit relationship (e.g. `[:div :a]`) will have a
+  `:descendant` interposed between them."
+  [path]
+  (->> (partition-all 2 1 path)
+       (remove (comp #{:>} first))
+       (mapcat
+        (fn [[element descendant]]
+          (cond
+            (= :> descendant)
+            [element :child]
+
+            (nil? descendant)
+            [element]
+
+            :else
+            [element :descendant])))
+       (into [nil])
+       (partition 2)))
+
 (defn create-matcher [path]
-  (.toMatcher
-   (reduce (fn [selector element-kw]
-             (-> selector
-                 .withChild
-                 (match-path-fragment element-kw)))
-           (-> (Selector/select)
-               (match-path-fragment (first path)))
-           (next path))))
+  (let [path (make-descendants-explicit path)]
+    (.toMatcher
+     (reduce (fn [selector [descendant element-kw]]
+               (-> (case descendant
+                     :descendant (.withDescendant selector)
+                     :child (.withChild selector))
+                   (match-path-fragment element-kw)))
+             (-> (Selector/select)
+                 (match-path-fragment (second (first path))))
+             (next path)))))
 
 (defn replace-in-document [html path->f]
   (let [parser (Parser.)
