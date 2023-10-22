@@ -52,7 +52,127 @@
                   <a class=\"foo\" id=\"foot\">Howdy!</a>
                 </body>"
                  [:.foo]))
-           ["fool" "food" "foot"]))))
+           ["fool" "food" "foot"])))
+
+  (testing "element#id selector"
+    (is (= (map #(.getAttribute % "id")
+                (sut/find-nodes
+                 "<body>Hello!
+                  <span class=\"foo\" id=\"fool\">Hi!</a>
+                  <div class=\"foo\" id=\"food\">Howdy!</a>
+                  <a class=\"foo\" id=\"foot\">Howdy!</a>
+                </body>"
+                 [:span#fool]))
+           ["fool"])))
+
+  (testing "#id only selector"
+    (is (= (map #(.getAttribute % "id")
+                (sut/find-nodes
+                 "<body>Hello!
+                  <span class=\"foo\" id=\"fool\">Hi!</a>
+                  <div class=\"foo\" id=\"food\">Howdy!</a>
+                  <a class=\"foo\" id=\"foot\">Howdy!</a>
+                </body>"
+                 [:#fool]))
+           ["fool"])))
+
+  (testing "element:first-child selector"
+    (is (= (map #(.getAttribute % "id")
+                (sut/find-nodes
+                 "<body><span class=\"foo\" id=\"fool\">Hi!</span></body>"
+                 [:span:first-child]))
+           ["fool"])))
+
+  (testing ":first-child only selector"
+    (is (= (map #(.getTagName %)
+                (sut/find-nodes
+                 "<body><span class=\"foo\" id=\"fool\"></span></body>"
+                 [":first-child"]))
+           ["HTML" "HEAD" "SPAN"])))
+
+  (testing ":first-child combined with :last-child"
+    (is (= (map #(.getTagName %)
+                (sut/find-nodes
+                 "<body><span class=\"foo\" id=\"fool\"></span></body>"
+                 [":first-child:last-child"]))
+           ["HTML" "SPAN"])))
+
+  (testing "attribute selector"
+    (is (= (map #(.getAttribute % "content")
+                (sut/find-nodes
+                 "<head>
+                    <title>A sample blog post | Rubberduck</title>
+                    <meta charset=\"utf-8\">
+                    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+                    <meta property=\"og:description\" content=\"A short open graph description\">
+                    <meta property=\"og:title\" content=\"A sample blog post\">
+                  </head>"
+                 ["[property]"]))
+           ["A short open graph description"
+            "A sample blog post"])))
+
+  (testing "attribute= selector"
+    (is (= (map #(.getAttribute % "content")
+                (sut/find-nodes
+                 "<head>
+                    <title>A sample blog post | Rubberduck</title>
+                    <meta charset=\"utf-8\">
+                    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+                    <meta property=\"og:description\" content=\"A short open graph description\">
+                    <meta property=\"og:title\" content=\"A sample blog post\">
+                  </head>"
+                 ["[property=og:title]"]))
+           ["A sample blog post"])))
+
+  (testing "attribute*= selector"
+    (is (= (map #(.getAttribute % "content")
+                (sut/find-nodes
+                 "<head>
+                    <title>A sample blog post | Rubberduck</title>
+                    <meta charset=\"utf-8\">
+                    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+                    <meta property=\"og:description\" content=\"A short open graph description\">
+                    <meta property=\"og:title\" content=\"A sample blog post\">
+                  </head>"
+                 ["[property*=title]"]))
+           ["A sample blog post"])))
+
+  (testing "attribute$= selector"
+    (is (= (map #(.getAttribute % "content")
+                (sut/find-nodes
+                 "<head>
+                    <title>A sample blog post | Rubberduck</title>
+                    <meta charset=\"utf-8\">
+                    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+                    <meta property=\"og:description\" content=\"A short open graph description\">
+                    <meta property=\"og:title\" content=\"A sample blog post\">
+                  </head>"
+                 ["[property$=title]"]))
+           ["A sample blog post"])))
+
+  (testing "attribute^= selector"
+    (is (= (map #(.getAttribute % "content")
+                (sut/find-nodes
+                 "<head>
+                    <title>A sample blog post | Rubberduck</title>
+                    <meta charset=\"utf-8\">
+                    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+                    <meta property=\"og:description\" content=\"A short open graph description\">
+                    <meta property=\"og:title\" content=\"A sample blog post\">
+                  </head>"
+                 ["[property^=og:]"]))
+           ["A short open graph description"
+            "A sample blog post"])))
+
+  (testing "attribute~= selector"
+    (is (= (map #(.getTextContent %)
+                (sut/find-nodes
+                 "<body>
+                   <div class=\"button special\">One</div>
+                   <div class=\"butt bodypart\">Two</div>
+                  </body>"
+                 ["[class~=butt]"]))
+           ["Two"]))))
 
 (deftest replace-in-document
   (is (= (sut/replace-in-document

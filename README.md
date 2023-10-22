@@ -24,11 +24,21 @@ It returns a sequence of
 [Nodes](https://static.javadoc.io/ch.digitalfondue.jfiveparse/jfiveparse/0.6.0/ch/digitalfondue/jfiveparse/Node.html)
 matching the path.
 
-A path is a vector of keywords of element names, with optional hiccup-esque class names. Like this:
+A path is a vector of keywords or string of hiccup-esque element selectors. Like this:
 
 - `[:a]` matches all anchor tags.
 - `[:form :input]` matches all input tags nested inside a form.
 - `[:div.foo]` matches all div tags with "foo" in its class name.
+- `[:.button]` matches all elements with the "button" class.
+- `[:div#content]` matches the div with "content" as its id.
+- `[:first-child]` matches any element that is the first child.
+- `[:last-child]` matches any element that is the last child.
+- `["meta[property]"]` matches all meta tags with the `property` attribute.
+- `["meta[property=og:title]"]` matches all meta tags with the `property`
+  attribute set to "og:title".
+
+The following additional attribute selectors are also supported, and work like
+they do in CSS: `*=`, `$=`, `~=` and `^=`.
 
 So running:
 
