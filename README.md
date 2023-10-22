@@ -28,6 +28,7 @@ A path is a vector of keywords or string of hiccup-esque element selectors. Like
 
 - `[:a]` matches all anchor tags.
 - `[:form :input]` matches all input tags nested inside a form.
+- `[:form :> :input]` matches all input tags that are direct children of a form.
 - `[:div.foo]` matches all div tags with "foo" in its class name.
 - `[:.button]` matches all elements with the "button" class.
 - `[:div#content]` matches the div with "content" as its id.
