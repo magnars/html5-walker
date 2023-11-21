@@ -220,7 +220,13 @@
            "<!DOCTYPE html><html><head></head><body>Hello!
              <a class=\"foo\" href=\"http://example.com\">Hi!</a>
              <a class=\"bar\" href=\"http://example.com\">Howdy <span class=\"first-name-holder\">Arthur B Ablabab</span>?</a>
-           </body></html>"))))
+           </body></html>")))
+
+  (testing "Only preserves DOCTYPE when at the start"
+    (is (= (sut/replace-in-document
+            "<html><body>Hello!<!DOCTYPE html></body></html>"
+            {})
+           "<html><head></head><body>Hello!</body></html>"))))
 
 (deftest replace-in-fragment
   (is (= (sut/replace-in-fragment
