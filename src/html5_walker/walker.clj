@@ -87,7 +87,7 @@
     (doseq [[path f] path->f]
       (doseq [node (.getAllNodesMatching doc (create-matcher path))]
         (f node)))
-    (str (re-find #"<!DOCTYPE[^>]+>" html)
+    (str (re-find #"^<!DOCTYPE[^>]+>" html)
          (.getOuterHTML (.getDocumentElement doc)))))
 
 (defn ^:export replace-in-fragment [html path->f]
