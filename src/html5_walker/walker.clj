@@ -87,7 +87,8 @@
     (doseq [[path f] path->f]
       (doseq [node (.getAllNodesMatching doc (create-matcher path))]
         (f node)))
-    (.getOuterHTML (.getDocumentElement doc))))
+    (str (re-find #"<!DOCTYPE[^>]+>" html)
+         (.getOuterHTML (.getDocumentElement doc)))))
 
 (defn ^:export replace-in-fragment [html path->f]
   (let [el (first (.parseFragment (Parser.) (Element. "div") (str "<div>" html "</div>")))]

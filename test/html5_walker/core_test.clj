@@ -206,7 +206,21 @@
          "<html><head></head><body>Hello!
              <a class=\"foo\" href=\"http://example.com\">Hi!</a>
              <a class=\"bar\" href=\"http://example.com\">Howdy <span class=\"first-name-holder\">Arthur B Ablabab</span>?</a>
-           </body></html>")))
+           </body></html>"))
+
+  (testing "Preserves DOCTYPE when present"
+    (is (= (sut/replace-in-document
+            "<!DOCTYPE html><html><body>Hello!
+             <a class=\"foo\" href=\"fool\">Hi!</a>
+             <a class=\"bar\" href=\"barn\">Howdy <span class=\"first-name-holder\">first-name-goes-here</span>?</a>
+           </body></html>"
+
+            {[:a] (fn [node] (.setAttribute node "href" "http://example.com"))
+             [:span.first-name-holder] (fn [node] (.setInnerHTML node "Arthur B Ablabab"))})
+           "<!DOCTYPE html><html><head></head><body>Hello!
+             <a class=\"foo\" href=\"http://example.com\">Hi!</a>
+             <a class=\"bar\" href=\"http://example.com\">Howdy <span class=\"first-name-holder\">Arthur B Ablabab</span>?</a>
+           </body></html>"))))
 
 (deftest replace-in-fragment
   (is (= (sut/replace-in-fragment
