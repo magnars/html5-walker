@@ -6,11 +6,11 @@ and replace in HTML5 strings.
 
 ## Install
 
-- add `[html5-walker "2023.10.22"]` to `:dependencies` in your project.clj
+- add `[html5-walker "2023.11.21"]` to `:dependencies` in your project.clj
 
 or
 
-- add  `html5-walker {:mvn/version "2023.10.22"}` to `:deps` in your deps.edn
+- add  `html5-walker/html5-walker {:mvn/version "2023.11.21"}` to `:deps` in your deps.edn
 
 ## Usage
 
@@ -97,6 +97,10 @@ original behavior, and the core namespace is kept around for backwards
 compatibility.
 
 ## Changes
+
+#### 2023.11.21
+
+- Preserve DOCTYPE [(cjohansen)](https://github.com/cjohansen)
 
 #### 2023.10.22
 
